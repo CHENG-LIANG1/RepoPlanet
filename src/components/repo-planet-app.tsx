@@ -37,8 +37,10 @@ export function RepoPlanetApp({ initialOwner, initialRepo }: RepoPlanetAppProps)
   const initialKey = initialOwner && initialRepo ? `${initialOwner}/${initialRepo}` : null;
   const [requestedKey, setRequestedKey] = useState<string | null>(initialKey);
   const [input, setInput] = useState(
-    initialOwner && initialRepo ? `github.com/${initialOwner}/${initialRepo}` : "github.com/facebook/react",
+    initialOwner && initialRepo ? `https://github.com/${initialOwner}/${initialRepo}` : "",
   );
+  const [generationVersion, setGenerationVersion] = useState(0);
+  const [generatedKey, setGeneratedKey] = useState<string | null>(null);
   const [data, setData] = useState<RepoPlanetData>(demoRepoData);
   const [loading, setLoading] = useState(Boolean(initialKey));
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +67,7 @@ export function RepoPlanetApp({ initialOwner, initialRepo }: RepoPlanetAppProps)
           throw new Error("error" in payload && payload.error ? payload.error : "Unable to generate this planet.");
         }
         setData(payload);
+        setGeneratedKey(requestedKey);
         setActiveCommitIndex(Math.max(0, payload.commits.length - 1));
         setFocusVersion((version) => version + 1);
       } catch (loadError) {
@@ -76,7 +79,10 @@ export function RepoPlanetApp({ initialOwner, initialRepo }: RepoPlanetAppProps)
     };
     void load();
     return () => controller.abort();
-  }, [requestedKey]);
+  }, [generationVersion, requestedKey]);
+
+  const inputRepository = useMemo(() => parseRepositoryInput(input), [input]);
+  const inputKey = inputRepository ? `${inputRepository.owner}/${inputRepository.repo}` : null;
 
   const activeCommit = useMemo(
     () => data.commits[Math.min(activeCommitIndex, Math.max(0, data.commits.length - 1))] ?? null,
@@ -87,11 +93,12 @@ export function RepoPlanetApp({ initialOwner, initialRepo }: RepoPlanetAppProps)
     event.preventDefault();
     const parsed = parseRepositoryInput(input);
     if (!parsed) {
-      setError("Use a public GitHub URL such as github.com/facebook/react.");
+      setError("Enter a complete public GitHub repository URL, such as https://github.com/facebook/react.");
       return;
     }
     const key = `${parsed.owner}/${parsed.repo}`;
     setRequestedKey(key);
+    setGenerationVersion((version) => version + 1);
     router.push(`/r/${encodeURIComponent(parsed.owner)}/${encodeURIComponent(parsed.repo)}`);
   };
 
@@ -120,18 +127,19 @@ export function RepoPlanetApp({ initialOwner, initialRepo }: RepoPlanetAppProps)
 
   return (
     <main className="app-shell">
-      <TopNavigation onExplore={handleExplore} onAbout={() => setAboutOpen(true)} />
+      <TopNavigation onAbout={() => setAboutOpen(true)} />
 
       <section className="hero-copy" aria-labelledby="page-title">
-        <h1 id="page-title">Turn any GitHub repository into a living world.</h1>
+        <h1 id="page-title">Any public GitHub repo can become a world.</h1>
         <p>
-          Paste a public repository. Watch its code, contributors, issues, and releases become a
-          world that keeps growing.
+          Paste its full GitHub repository URL. RepoPlanet maps the code, contributors, issues, and
+          releases into a living world you can explore.
         </p>
         <RepositoryForm
           value={input}
           loading={loading}
           error={error}
+          generated={Boolean(generatedKey && inputKey === generatedKey)}
           onChange={(value) => {
             setInput(value);
             if (error) setError(null);

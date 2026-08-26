@@ -3,25 +3,27 @@ import type { ParsedRepository } from "@/types/repository";
 const PART_PATTERN = /^[A-Za-z0-9_.-]+$/;
 
 export function parseRepositoryInput(input: string): ParsedRepository | null {
-  const trimmed = input.trim().replace(/\/$/, "");
+  const trimmed = input.trim();
   if (!trimmed) return null;
 
-  let path = trimmed;
-  if (/^https?:\/\//i.test(trimmed)) {
-    try {
-      const url = new URL(trimmed);
-      if (url.hostname !== "github.com" && url.hostname !== "www.github.com") {
-        return null;
-      }
-      path = url.pathname;
-    } catch {
-      return null;
-    }
-  } else {
-    path = path.replace(/^github\.com\//i, "");
+  let url: URL;
+  try {
+    url = new URL(trimmed);
+  } catch {
+    return null;
   }
 
-  const [owner, rawRepo, ...rest] = path.replace(/^\//, "").split("/");
+  if (
+    (url.protocol !== "https:" && url.protocol !== "http:") ||
+    (url.hostname !== "github.com" && url.hostname !== "www.github.com") ||
+    url.username ||
+    url.password ||
+    url.port
+  ) {
+    return null;
+  }
+
+  const [owner, rawRepo, ...rest] = url.pathname.replace(/^\//, "").replace(/\/$/, "").split("/");
   const repo = rawRepo?.replace(/\.git$/i, "");
 
   if (

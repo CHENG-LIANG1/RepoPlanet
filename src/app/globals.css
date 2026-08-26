@@ -149,7 +149,8 @@ button {
   gap: 10px;
 }
 
-.top-navigation nav button {
+.top-navigation nav button,
+.top-navigation nav a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -162,11 +163,14 @@ button {
   font-size: 14px;
   font-weight: 520;
   cursor: pointer;
+  text-decoration: none;
   transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
 .top-navigation nav button:hover,
-.top-navigation nav button:focus-visible {
+.top-navigation nav button:focus-visible,
+.top-navigation nav a:hover,
+.top-navigation nav a:focus-visible {
   border-color: var(--border);
   outline: none;
   background: rgba(152, 183, 218, 0.06);
@@ -205,18 +209,39 @@ button {
   margin-top: 29px;
 }
 
+.repository-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 2px 9px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+}
+
+.repository-label small {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 540;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
 .repository-input {
   position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  height: 58px;
+  height: 62px;
   padding: 0 15px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid rgba(216, 255, 62, 0.42);
   border-radius: 13px;
   background: rgba(4, 10, 19, 0.78);
   color: var(--text);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.015), 0 20px 54px rgba(0, 0, 0, 0.22);
+  box-shadow: inset 3px 0 0 rgba(216, 255, 62, 0.78), 0 20px 54px rgba(0, 0, 0, 0.22);
   transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
@@ -232,6 +257,7 @@ button {
 
 .repository-input > svg:first-child {
   flex: 0 0 auto;
+  color: var(--accent);
 }
 
 .repository-input input {
@@ -260,6 +286,13 @@ button {
   color: #ffaaa5;
   font-size: 12px;
   line-height: 1.4;
+}
+
+.repository-hint {
+  margin: 8px 2px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
 }
 
 .generate-button {
@@ -951,12 +984,14 @@ button {
     height: 29px;
   }
 
-  .top-navigation nav button {
+  .top-navigation nav button,
+  .top-navigation nav a {
     padding: 0 6px;
     font-size: 0;
   }
 
-  .top-navigation nav button svg {
+  .top-navigation nav button svg,
+  .top-navigation nav a svg {
     width: 19px;
     height: 19px;
   }
@@ -979,14 +1014,16 @@ button {
   }
 
   .repository-form {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 52px;
-    gap: 8px;
     margin-top: 17px;
   }
 
+  .repository-label {
+    margin-bottom: 7px;
+    font-size: 12px;
+  }
+
   .repository-input {
-    height: 50px;
+    height: 52px;
     border-radius: 11px;
   }
 
@@ -995,25 +1032,22 @@ button {
   }
 
   .generate-button {
-    width: 52px;
-    height: 50px;
-    margin-top: 0;
+    width: 100%;
+    height: 48px;
+    margin-top: 8px;
     border-radius: 11px;
   }
 
   .generate-button span {
+    display: inline;
+  }
+
+  .repository-hint {
     display: none;
   }
 
-  .form-error {
-    position: absolute;
-    top: 54px;
-    right: 0;
-    left: 0;
-  }
-
   .planet-stage {
-    top: 224px;
+    top: 320px;
     right: -17%;
     bottom: 142px;
     left: -17%;

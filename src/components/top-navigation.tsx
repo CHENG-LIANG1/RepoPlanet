@@ -1,21 +1,25 @@
-import { Compass, Info } from "lucide-react";
+import { Info } from "lucide-react";
 
 import { BrandMark } from "@/components/brand-mark";
+import { GitHubMark } from "@/components/icons/github-mark";
 
 interface TopNavigationProps {
-  onExplore: () => void;
   onAbout: () => void;
 }
 
-export function TopNavigation({ onExplore, onAbout }: TopNavigationProps) {
+export function TopNavigation({ onAbout }: TopNavigationProps) {
   return (
     <header className="top-navigation">
       <BrandMark />
       <nav aria-label="Primary navigation">
-        <button type="button" onClick={onExplore}>
-          <Compass size={18} strokeWidth={1.75} aria-hidden="true" />
-          Explore
-        </button>
+        <a
+          href="https://github.com/CHENG-LIANG1/RepoPlanet"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <GitHubMark width={18} height={18} />
+          GitHub
+        </a>
         <button type="button" onClick={onAbout}>
           <Info size={18} strokeWidth={1.75} aria-hidden="true" />
           About
