@@ -1,0 +1,22 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# local environment
+.env*
+!.env.example
+
+# logs and OS files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# test output
+/coverage
